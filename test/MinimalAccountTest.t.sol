@@ -52,4 +52,22 @@ contract MinimalAccountTest is Test, ZkSyncChainChecker {
         // Assert
         assertEq(usdc.balanceOf(address(minimalAccount)), AMOUNT);
     }
+
+    function testNonOwnerCannotExecuteCommands() public skipZkSync {
+        // Arrange
+        assertEq(usdc.balanceOf(address(minimalAccount)), 0);
+        address dest = address(usdc);
+        uint256 value = 0;
+        bytes memory functionData = abi.encodeWithSelector(
+            ERC20Mock.mint.selector,
+            address(minimalAccount),
+            AMOUNT
+        );
+        // Act
+        vm.prank(randomuser);
+        vm.expectRevert(
+            MinimalAccount.MinimalAccount__NotFromEntryPointOrOwner.selector
+        );
+        minimalAccount.execute(dest, value, functionData);
+    }
 }
