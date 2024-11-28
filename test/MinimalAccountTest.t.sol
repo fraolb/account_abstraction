@@ -106,4 +106,44 @@ contract MinimalAccountTest is Test, ZkSyncChainChecker {
         // Assert
         assertEq(actualSigner, minimalAccount.owner());
     }
+
+    // 1. Sign user ops
+    // 2. Call validate userops
+    // 3. Assert the return is correct
+    function testValidationOfUserOps() public skipZkSync {
+        // Arrange
+        assertEq(usdc.balanceOf(address(minimalAccount)), 0);
+        address dest = address(usdc);
+        uint256 value = 0;
+        bytes memory functionData = abi.encodeWithSelector(
+            ERC20Mock.mint.selector,
+            address(minimalAccount),
+            AMOUNT
+        );
+        bytes memory executeCallData = abi.encodeWithSelector(
+            MinimalAccount.execute.selector,
+            dest,
+            value,
+            functionData
+        );
+        PackedUserOperation memory packedUserOp = sendPackedUserOp
+            .generateSignedUserOperation(
+                executeCallData,
+                helperConfig.getConfig(),
+                address(minimalAccount)
+            );
+        bytes32 userOperationHash = IEntryPoint(
+            helperConfig.getConfig().entryPoint
+        ).getUserOpHash(packedUserOp);
+        uint256 missingAccountFunds = 1e18;
+
+        // Act
+        vm.prank(helperConfig.getConfig().entryPoint);
+        uint256 validationData = minimalAccount.validateUserOp(
+            packedUserOp,
+            userOperationHash,
+            missingAccountFunds
+        );
+        assertEq(validationData, 0);
+    }
 }
