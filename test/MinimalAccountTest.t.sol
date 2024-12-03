@@ -75,6 +75,7 @@ contract MinimalAccountTest is Test, ZkSyncChainChecker {
         // Arrange
         assertEq(usdc.balanceOf(address(minimalAccount)), 0);
         address dest = address(usdc);
+        address dest2 = address(usdc);
         uint256 value = 0;
         bytes memory functionData = abi.encodeWithSelector(
             ERC20Mock.mint.selector,
