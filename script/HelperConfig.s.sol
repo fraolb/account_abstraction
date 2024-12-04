@@ -96,6 +96,7 @@ contract HelperConfig is Script {
             });
     }
 
+    //zk config
     function getZkSyncSepoliaConfig()
         public
         pure
@@ -118,6 +119,7 @@ contract HelperConfig is Script {
             });
     }
 
+    // eth config
     function getOrCreateAnvilEthConfig() public returns (NetworkConfig memory) {
         if (localNetworkConfig.account != address(0)) {
             return localNetworkConfig;
