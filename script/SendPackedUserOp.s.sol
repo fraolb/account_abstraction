@@ -55,6 +55,7 @@ contract SendPackedUserOp is Script {
         vm.stopBroadcast();
     }
 
+    //first we genereta unsigned data then we hash and sign it
     function generateSignedUserOperation(
         bytes memory callData,
         HelperConfig.NetworkConfig memory config,
