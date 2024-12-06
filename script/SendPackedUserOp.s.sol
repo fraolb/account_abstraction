@@ -89,6 +89,7 @@ contract SendPackedUserOp is Script {
         return userOp;
     }
 
+    // generates unsigned operation
     function _generateUnsignedUserOperation(
         bytes memory callData,
         address sender,
