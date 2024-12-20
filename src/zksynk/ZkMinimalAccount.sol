@@ -31,7 +31,7 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
  * 8. The main node calls executeTransaction
  * 9. If a paymaster was used, the postTransaction is called
  */
-contract ZkMinimalAccount {
+contract ZkMinimalAccount is IAccount, Ownable {
     error ZkMinimalAccount__NotEnoughBalance();
     error ZkMinimalAccount__NotFromBootLoader();
     error ZkMinimalAccount__ExecutionFailed();
@@ -55,4 +55,8 @@ contract ZkMinimalAccount {
         }
         _;
     }
+
+    constructor() Ownable(msg.sender) {}
+
+    receive() external payable {}
 }
