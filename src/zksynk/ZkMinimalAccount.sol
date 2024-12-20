@@ -59,4 +59,20 @@ contract ZkMinimalAccount is IAccount, Ownable {
     constructor() Ownable(msg.sender) {}
 
     receive() external payable {}
+
+    /*//////////////////////////////////////////////////////////////
+                           EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+    /**
+     * @notice must increase the nonce
+     * @notice must validate the transaction (check the owner signed the transaction)
+     * @notice also check to see if we have enough money in our account
+     */
+    function validateTransaction(
+        bytes32,
+        /*_txHash*/ bytes32,
+        /*_suggestedSignedHash*/ Transaction memory _transaction
+    ) external payable requireFromBootLoader returns (bytes4 magic) {
+        return _validateTransaction(_transaction);
+    }
 }
