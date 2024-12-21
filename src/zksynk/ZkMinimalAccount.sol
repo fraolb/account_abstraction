@@ -75,4 +75,12 @@ contract ZkMinimalAccount is IAccount, Ownable {
     ) external payable requireFromBootLoader returns (bytes4 magic) {
         return _validateTransaction(_transaction);
     }
+
+    function executeTransaction(
+        bytes32,
+        /*_txHash*/ bytes32,
+        /*_suggestedSignedHash*/ Transaction memory _transaction
+    ) external payable requireFromBootLoaderOrOwner {
+        _executeTransaction(_transaction);
+    }
 }
