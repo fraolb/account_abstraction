@@ -83,4 +83,14 @@ contract ZkMinimalAccount is IAccount, Ownable {
     ) external payable requireFromBootLoaderOrOwner {
         _executeTransaction(_transaction);
     }
+
+    function executeTransactionFromOutside(
+        Transaction memory _transaction
+    ) external payable {
+        bytes4 magic = _validateTransaction(_transaction);
+        if (magic != ACCOUNT_VALIDATION_SUCCESS_MAGIC) {
+            revert ZkMinimalAccount__InvalidSignature();
+        }
+        _executeTransaction(_transaction);
+    }
 }
