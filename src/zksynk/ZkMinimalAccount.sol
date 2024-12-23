@@ -93,4 +93,15 @@ contract ZkMinimalAccount is IAccount, Ownable {
         }
         _executeTransaction(_transaction);
     }
+
+    function payForTransaction(
+        bytes32,
+        /*_txHash*/ bytes32,
+        /*_suggestedSignedHash*/ Transaction memory _transaction
+    ) external payable {
+        bool success = _transaction.payToTheBootloader();
+        if (!success) {
+            revert ZkMinimalAccount__FailedToPay();
+        }
+    }
 }
