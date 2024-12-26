@@ -148,12 +148,30 @@ contract ZkMinimalAccount is IAccount, Ownable {
         uint128 value = Utils.safeCastToU128(_transaction.value);
         bytes memory data = _transaction.data;
 
-        uint32 gas = Utils.safeCastToU32(gasleft());
-        SystemContractsCaller.systemCallWithPropagatedRevert(
-            gas,
-            to,
-            value,
-            data
-        );
+        if (to == address(DEPLOYER_SYSTEM_CONTRACT)) {
+            uint32 gas = Utils.safeCastToU32(gasleft());
+            SystemContractsCaller.systemCallWithPropagatedRevert(
+                gas,
+                to,
+                value,
+                data
+            );
+        } else {
+            bool success;
+            assembly {
+                success := call(
+                    gas(),
+                    to,
+                    value,
+                    add(data, 0x20),
+                    mload(data),
+                    0,
+                    0
+                )
+            }
+            if (!success) {
+                revert ZkMinimalAccount__ExecutionFailed();
+            }
+        }
     }
 }
