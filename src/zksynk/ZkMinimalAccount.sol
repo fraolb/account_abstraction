@@ -105,6 +105,12 @@ contract ZkMinimalAccount is IAccount, Ownable {
         }
     }
 
+    function prepareForPaymaster(
+        bytes32 _txHash,
+        bytes32 _possibleSignedHash,
+        Transaction memory _transaction
+    ) external payable {}
+
     /*//////////////////////////////////////////////////////////////
                            INTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
