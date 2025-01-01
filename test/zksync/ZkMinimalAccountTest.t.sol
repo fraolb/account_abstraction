@@ -34,4 +34,34 @@ contract ZkMinimalAccountTest is Test, ZkSyncChainChecker {
         usdc = new ERC20Mock();
         vm.deal(address(minimalAccount), AMOUNT);
     }
+
+    function testZkOwnerCanExecuteCommands() public {
+        // Arrange
+        address dest = address(usdc);
+        uint256 value = 0;
+        bytes memory functionData = abi.encodeWithSelector(
+            ERC20Mock.mint.selector,
+            address(minimalAccount),
+            AMOUNT
+        );
+
+        Transaction memory transaction = _createUnsignedTransaction(
+            minimalAccount.owner(),
+            113,
+            dest,
+            value,
+            functionData
+        );
+
+        // Act
+        vm.prank(minimalAccount.owner());
+        minimalAccount.executeTransaction(
+            EMPTY_BYTES32,
+            EMPTY_BYTES32,
+            transaction
+        );
+
+        // Assert
+        assertEq(usdc.balanceOf(address(minimalAccount)), AMOUNT);
+    }
 }
