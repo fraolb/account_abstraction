@@ -64,4 +64,35 @@ contract ZkMinimalAccountTest is Test, ZkSyncChainChecker {
         // Assert
         assertEq(usdc.balanceOf(address(minimalAccount)), AMOUNT);
     }
+
+    // You'll also need --system-mode=true to run this test
+    function testZkValidateTransaction() public onlyZkSync {
+        // Arrange
+        address dest = address(usdc);
+        uint256 value = 0;
+        bytes memory functionData = abi.encodeWithSelector(
+            ERC20Mock.mint.selector,
+            address(minimalAccount),
+            AMOUNT
+        );
+        Transaction memory transaction = _createUnsignedTransaction(
+            minimalAccount.owner(),
+            113,
+            dest,
+            value,
+            functionData
+        );
+        transaction = _signTransaction(transaction);
+
+        // Act
+        vm.prank(BOOTLOADER_FORMAL_ADDRESS);
+        bytes4 magic = minimalAccount.validateTransaction(
+            EMPTY_BYTES32,
+            EMPTY_BYTES32,
+            transaction
+        );
+
+        // Assert
+        assertEq(magic, ACCOUNT_VALIDATION_SUCCESS_MAGIC);
+    }
 }
