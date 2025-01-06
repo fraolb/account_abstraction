@@ -95,4 +95,24 @@ contract ZkMinimalAccountTest is Test, ZkSyncChainChecker {
         // Assert
         assertEq(magic, ACCOUNT_VALIDATION_SUCCESS_MAGIC);
     }
+
+    /*//////////////////////////////////////////////////////////////
+                                HELPERS
+    //////////////////////////////////////////////////////////////*/
+    function _signTransaction(
+        Transaction memory transaction
+    ) internal view returns (Transaction memory) {
+        bytes32 unsignedTransactionHash = MemoryTransactionHelper.encodeHash(
+            transaction
+        );
+        // bytes32 digest = unsignedTransactionHash.toEthSignedMessageHash();
+        uint8 v;
+        bytes32 r;
+        bytes32 s;
+        uint256 ANVIL_DEFAULT_KEY = 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80;
+        (v, r, s) = vm.sign(ANVIL_DEFAULT_KEY, unsignedTransactionHash);
+        Transaction memory signedTransaction = transaction;
+        signedTransaction.signature = abi.encodePacked(r, s, v);
+        return signedTransaction;
+    }
 }
