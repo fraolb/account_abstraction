@@ -96,6 +96,30 @@ contract ZkMinimalAccountTest is Test, ZkSyncChainChecker {
         assertEq(magic, ACCOUNT_VALIDATION_SUCCESS_MAGIC);
     }
 
+    function testFailInvalidSignature() public {
+        // Arrange
+        address dest = address(usdc);
+        uint256 value = 0;
+        bytes memory functionData = abi.encodeWithSelector(
+            ERC20Mock.mint.selector,
+            address(minimalAccount),
+            AMOUNT
+        );
+
+        Transaction memory transaction = _createUnsignedTransaction(
+            address(0xdeadbeef), // Invalid signer
+            113,
+            dest,
+            value,
+            functionData
+        );
+        transaction.signature = abi.encodePacked(
+            bytes32(0),
+            bytes32(0),
+            uint8(0)
+        );
+    }
+
     /*//////////////////////////////////////////////////////////////
                                 HELPERS
     //////////////////////////////////////////////////////////////*/
