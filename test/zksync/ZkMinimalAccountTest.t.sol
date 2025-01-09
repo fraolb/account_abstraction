@@ -118,6 +118,17 @@ contract ZkMinimalAccountTest is Test, ZkSyncChainChecker {
             bytes32(0),
             uint8(0)
         );
+
+        // Act & Assert
+        vm.prank(BOOTLOADER_FORMAL_ADDRESS);
+        bytes4 magic = minimalAccount.validateTransaction(
+            EMPTY_BYTES32,
+            EMPTY_BYTES32,
+            transaction
+        );
+
+        // Should revert or not match the magic value
+        assertEq(magic, bytes4(0));
     }
 
     /*//////////////////////////////////////////////////////////////
