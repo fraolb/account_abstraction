@@ -131,6 +131,25 @@ contract ZkMinimalAccountTest is Test, ZkSyncChainChecker {
         assertEq(magic, bytes4(0));
     }
 
+    function testFailInsufficientBalance() public {
+        // Arrange
+        address dest = address(usdc);
+        uint256 highValue = AMOUNT + 1e18; // Exceeds available balance
+        bytes memory functionData = abi.encodeWithSelector(
+            ERC20Mock.mint.selector,
+            address(minimalAccount),
+            highValue
+        );
+
+        Transaction memory transaction = _createUnsignedTransaction(
+            minimalAccount.owner(),
+            113,
+            dest,
+            highValue,
+            functionData
+        );
+    }
+
     /*//////////////////////////////////////////////////////////////
                                 HELPERS
     //////////////////////////////////////////////////////////////*/
