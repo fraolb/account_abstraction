@@ -161,6 +161,26 @@ contract ZkMinimalAccountTest is Test, ZkSyncChainChecker {
         );
     }
 
+    function testNonOwnerCannotExecuteTransaction() public {
+        // Arrange
+        address dest = address(usdc);
+        uint256 value = 0;
+        bytes memory functionData = abi.encodeWithSelector(
+            ERC20Mock.mint.selector,
+            address(minimalAccount),
+            AMOUNT
+        );
+
+        Transaction memory transaction = _createUnsignedTransaction(
+            address(0xbaduser), // Non-owner address
+            113,
+            dest,
+            value,
+            functionData
+        );
+
+    }
+
     /*//////////////////////////////////////////////////////////////
                                 HELPERS
     //////////////////////////////////////////////////////////////*/
