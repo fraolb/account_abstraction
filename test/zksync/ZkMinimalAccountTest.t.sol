@@ -179,6 +179,15 @@ contract ZkMinimalAccountTest is Test, ZkSyncChainChecker {
             functionData
         );
 
+        // Act & Assert
+        vm.prank(address(0xbaduser));
+        vm.expectRevert(ZkMinimalAccount.ZkMinimalAccount__NotFromBootLoaderOrOwner.selector);
+        minimalAccount.executeTransaction(
+            EMPTY_BYTES32,
+            EMPTY_BYTES32,
+            transaction
+        );
+
     }
 
     /*//////////////////////////////////////////////////////////////
