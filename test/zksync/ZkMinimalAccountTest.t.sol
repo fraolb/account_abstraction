@@ -84,6 +84,18 @@ contract ZkMinimalAccountTest is Test, ZkSyncChainChecker {
         );
         transaction = _signTransaction(transaction);
 
+        // Act
+        vm.prank(BOOTLOADER_FORMAL_ADDRESS);
+        minimalAccount.payForTransaction(
+            EMPTY_BYTES32,
+            EMPTY_BYTES32,
+            transaction
+        );
+
+        // Assert
+        // Since the function only pays for the transaction, no changes to the USDC balance
+        assertEq(usdc.balanceOf(address(minimalAccount)), 0);
+
      }
 
     // You'll also need --system-mode=true to run this test
