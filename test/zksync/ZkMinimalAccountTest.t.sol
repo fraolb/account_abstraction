@@ -223,6 +223,20 @@ contract ZkMinimalAccountTest is Test, ZkSyncChainChecker {
 
     }
 
+    function testExecuteTransactionFromOutside() public {
+        // Arrange
+        address dest = address(usdc);
+        uint256 value = 0;
+        bytes memory functionData = abi.encodeWithSelector(
+            ERC20Mock.mint.selector,
+            address(minimalAccount),
+            AMOUNT
+        );
+
+       
+    }
+
+
     /*//////////////////////////////////////////////////////////////
                                 HELPERS
     //////////////////////////////////////////////////////////////*/
