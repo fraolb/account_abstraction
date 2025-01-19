@@ -233,7 +233,14 @@ contract ZkMinimalAccountTest is Test, ZkSyncChainChecker {
             AMOUNT
         );
 
-       
+       Transaction memory transaction = _createUnsignedTransaction(
+            minimalAccount.owner(),
+            113,
+            dest,
+            value,
+            functionData
+        );
+        transaction = _signTransaction(transaction);
     }
 
 
